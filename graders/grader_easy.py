@@ -7,3 +7,9 @@ def grader_easy(episode_result: dict) -> float:
     step_score = max(0.0, 1.0 - (steps / max_steps))
     score = 0.6 * rescue_score + 0.4 * step_score
     return round(min(max(score, 0.0), 1.0), 4)
+
+
+grader = grader_easy
+grade = grader_easy
+
+__all__ = ["grader_easy", "grader", "grade"]

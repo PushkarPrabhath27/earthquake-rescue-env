@@ -7,6 +7,10 @@ sdk: docker
 pinned: false
 license: mit
 short_description: OpenEnv earthquake rescue with graded drone-rover tasks
+tags:
+  - openenv
+  - fastapi
+  - reinforcement-learning
 ---
 
 # Earthquake Rescue Multimodal Robot
@@ -112,11 +116,18 @@ Reward behavior:
 
 The environment exposes three graded tasks with increasing difficulty. Each task is declared in [openenv.yaml](/c:/Users/pushk/OneDrive/Documents/ScalerMetaHackathon/openenv.yaml) and each YAML config in [tasks/](/c:/Users/pushk/OneDrive/Documents/ScalerMetaHackathon/tasks) also includes its own grader reference so validators can discover them directly.
 
+For validator compatibility, task metadata is intentionally exposed in several places:
+
+- manifest declarations in [openenv.yaml](/c:/Users/pushk/OneDrive/Documents/ScalerMetaHackathon/openenv.yaml)
+- Python task modules in [tasks/easy.py](/c:/Users/pushk/OneDrive/Documents/ScalerMetaHackathon/tasks/easy.py), [tasks/medium.py](/c:/Users/pushk/OneDrive/Documents/ScalerMetaHackathon/tasks/medium.py), and [tasks/hard.py](/c:/Users/pushk/OneDrive/Documents/ScalerMetaHackathon/tasks/hard.py)
+- registry exports in [tasks/registry.py](/c:/Users/pushk/OneDrive/Documents/ScalerMetaHackathon/tasks/registry.py) and [task_registry.py](/c:/Users/pushk/OneDrive/Documents/ScalerMetaHackathon/task_registry.py)
+- standalone grader callables in [grader_easy.py](/c:/Users/pushk/OneDrive/Documents/ScalerMetaHackathon/grader_easy.py), [grader_medium.py](/c:/Users/pushk/OneDrive/Documents/ScalerMetaHackathon/grader_medium.py), and [grader_hard.py](/c:/Users/pushk/OneDrive/Documents/ScalerMetaHackathon/grader_hard.py)
+
 | Task | Goal | Rubble | Victims | Max Steps | Battery Multiplier | Grader |
 | --- | --- | --- | --- | --- | --- | --- |
-| `easy` | Full rescue with simple coordination | `15%` | `2` | `500` | `0.5` | `grader_easy.grader_easy` |
-| `medium` | Full rescue with coordination + energy emphasis | `28%` | `4` | `430` | `0.9` | `grader_medium.grader_medium` |
-| `hard` | Full rescue under tighter routing pressure | `36%` | `5` | `420` | `0.7` | `grader_hard.grader_hard` |
+| `easy` | Full rescue with simple coordination | `15%` | `2` | `500` | `0.5` | `grader_easy.grade` |
+| `medium` | Full rescue with coordination + energy emphasis | `28%` | `4` | `430` | `0.9` | `grader_medium.grade` |
+| `hard` | Full rescue under tighter routing pressure | `36%` | `5` | `420` | `0.7` | `grader_hard.grade` |
 
 ### Grader Summary
 
@@ -197,6 +208,31 @@ Returns:
 ### `GET /state`
 
 Returns the latest observation without mutating the episode.
+
+### `GET /tasks`
+
+Returns the full task catalog, including difficulty, objective, success metric, config path, and grader path for all three tasks.
+
+### `POST /grade`
+
+Accepts `task_id` plus either `episode_result` or `info`, then returns a deterministic score in `[0.0, 1.0]`.
+
+Example:
+
+```json
+{
+  "task_id": "medium",
+  "info": {
+    "victims_rescued": 4,
+    "victims_total": 4,
+    "steps_used": 120,
+    "max_steps": 430,
+    "drone_battery_used": 0.18,
+    "rover_battery_used": 0.31,
+    "coordination_score": 1.0
+  }
+}
+```
 
 ## Repository Structure
 

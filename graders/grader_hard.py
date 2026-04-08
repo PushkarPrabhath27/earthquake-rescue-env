@@ -10,3 +10,9 @@ def grader_hard(episode_result: dict) -> float:
     energy_score = max(0.0, 1.0 - avg_battery_used)
     score = 0.5 + 0.3 * speed_score + 0.2 * energy_score
     return round(min(max(score, 0.0), 1.0), 4)
+
+
+grader = grader_hard
+grade = grader_hard
+
+__all__ = ["grader_hard", "grader", "grade"]

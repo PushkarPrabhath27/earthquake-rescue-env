@@ -19,7 +19,16 @@ dependencies = [
 server = "server.app:main"
 
 [tool.setuptools]
-py-modules = ["inference", "grader_easy", "grader_medium", "grader_hard"]
+py-modules = [
+  "inference",
+  "grader_easy",
+  "grader_medium",
+  "grader_hard",
+  "task_easy",
+  "task_medium",
+  "task_hard",
+  "task_registry",
+]
 
 [tool.setuptools.packages.find]
 where = ["."]

@@ -7,3 +7,9 @@ def grader_medium(episode_result: dict) -> float:
     coordination_score = episode_result.get("coordination_score", 0.0)
     score = 0.5 * rescue_score + 0.3 * energy_score + 0.2 * coordination_score
     return round(min(max(score, 0.0), 1.0), 4)
+
+
+grader = grader_medium
+grade = grader_medium
+
+__all__ = ["grader_medium", "grader", "grade"]

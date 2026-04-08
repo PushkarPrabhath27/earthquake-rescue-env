@@ -1,5 +1,14 @@
 spec_version: 1
 name: earthquake-rescue-multimodal
+version: "1.0.0"
+description: >
+  Multimodal drone and rover rescue coordination in post-earthquake terrain.
+author: Neuron
+tags:
+  - openenv
+  - reinforcement-learning
+  - robotics
+  - disaster-response
 type: space
 runtime: fastapi
 app: server.app:app
@@ -7,16 +16,34 @@ port: 7860
 tasks:
   - id: easy
     name: Easy Rescue Sweep
+    description: Introductory rescue mission with sparse rubble and two victims.
+    difficulty: easy
+    objective: Rescue all victims while establishing the basic drone-to-rover workflow.
+    success_metric: Rescue every victim before the step budget is exhausted.
+    max_steps: 500
+    reward_range: [0.0, 1.0]
     config: tasks/easy.yaml
-    grader: grader_easy.grader_easy
+    grader: grader_easy.grade
   - id: medium
     name: Coordinated Multi-Rescue
+    description: Denser rescue mission that rewards coordinated scouting and efficient energy use.
+    difficulty: medium
+    objective: Rescue all victims while preserving battery and maximizing pre-rescue scouting.
+    success_metric: Rescue every victim with strong coordination and energy efficiency.
+    max_steps: 430
+    reward_range: [0.0, 1.0]
     config: tasks/medium.yaml
-    grader: grader_medium.grader_medium
+    grader: grader_medium.grade
   - id: hard
     name: Full Disaster Clearance
+    description: Full-mission rescue scenario with tight routing demands and complete-clearance scoring.
+    difficulty: hard
+    objective: Rescue all victims in a cluttered disaster zone as quickly as possible.
+    success_metric: Rescue every victim while keeping time and battery usage low.
+    max_steps: 420
+    reward_range: [0.0, 1.0]
     config: tasks/hard.yaml
-    grader: grader_hard.grader_hard
+    grader: grader_hard.grade
 
 environment:
   name: earthquake-rescue-multimodal
@@ -29,16 +56,28 @@ environment:
   tasks:
     - id: easy
       name: Easy Rescue Sweep
+      description: Introductory rescue mission with sparse rubble and two victims.
+      difficulty: easy
+      max_steps: 500
+      reward_range: [0.0, 1.0]
       config: tasks/easy.yaml
-      grader: grader_easy.grader_easy
+      grader: grader_easy.grade
     - id: medium
       name: Coordinated Multi-Rescue
+      description: Denser rescue mission that rewards coordinated scouting and efficient energy use.
+      difficulty: medium
+      max_steps: 430
+      reward_range: [0.0, 1.0]
       config: tasks/medium.yaml
-      grader: grader_medium.grader_medium
+      grader: grader_medium.grade
     - id: hard
       name: Full Disaster Clearance
+      description: Full-mission rescue scenario with tight routing demands and complete-clearance scoring.
+      difficulty: hard
+      max_steps: 420
+      reward_range: [0.0, 1.0]
       config: tasks/hard.yaml
-      grader: grader_hard.grader_hard
+      grader: grader_hard.grade
   action_space:
     type: dict
     agents:
@@ -101,6 +140,8 @@ environment:
     step: /step
     state: /state
     health: /health
+    tasks: /tasks
+    grade: /grade
   runtime:
     max_episode_steps: 500
     timeout_seconds: 5

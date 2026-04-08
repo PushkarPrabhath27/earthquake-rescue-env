@@ -19,6 +19,11 @@ if str(ROOT) not in sys.path:
 
 from env.core import EarthquakeRescueEnv
 from models.action import ResetRequest, StepAction
+from models.tasking import GradeRequest, GradeResponse, TaskDescriptor, TasksResponse
+from tasks import TASKS, TASK_REGISTRY
+from grader_easy import grade as grade_easy
+from grader_medium import grade as grade_medium
+from grader_hard import grade as grade_hard
 
 
 def load_task_config(task_id: str) -> dict:
@@ -36,13 +41,36 @@ current_obs = env._build_observation()
 app = FastAPI(title="Earthquake Rescue OpenEnv")
 
 
+GRADE_FNS = {
+    "easy": grade_easy,
+    "medium": grade_medium,
+    "hard": grade_hard,
+}
+
+
+def public_task_descriptor(task_id: str) -> TaskDescriptor:
+    task = TASK_REGISTRY[task_id]
+    return TaskDescriptor(
+        id=task["id"],
+        name=task["name"],
+        difficulty=task["difficulty"],
+        description=task["description"],
+        objective=task["objective"],
+        success_metric=task["success_metric"],
+        config_path=task["config_path"],
+        grader_path=task["grader_path"],
+        max_steps=task["max_steps"],
+        reward_range=task["reward_range"],
+    )
+
+
 @app.get("/")
 async def root():
     return {
         "name": "earthquake-rescue-multimodal",
         "status": "ok",
         "task": current_task_id,
-        "endpoints": ["/health", "/reset", "/step", "/state"],
+        "endpoints": ["/health", "/reset", "/step", "/state", "/tasks", "/grade"],
     }
 
 
@@ -85,6 +113,32 @@ async def step(action: StepAction):
 @app.get("/state")
 async def state():
     return JSONResponse(content=current_obs)
+
+
+@app.get("/tasks")
+async def tasks() -> JSONResponse:
+    payload = TasksResponse(tasks=[public_task_descriptor(task["id"]) for task in TASKS])
+    return JSONResponse(content=payload.model_dump(mode="json"))
+
+
+@app.get("/tasks/{task_id}")
+async def task_detail(task_id: str) -> JSONResponse:
+    if task_id not in TASK_REGISTRY:
+        raise HTTPException(status_code=404, detail=f"Unknown task_id '{task_id}'")
+    payload = public_task_descriptor(task_id)
+    return JSONResponse(content=payload.model_dump(mode="json"))
+
+
+@app.post("/grade")
+async def grade(payload: GradeRequest) -> JSONResponse:
+    if payload.task_id not in GRADE_FNS:
+        raise HTTPException(status_code=404, detail=f"Unknown task_id '{payload.task_id}'")
+    episode_result = payload.episode_result or payload.info
+    if not episode_result:
+        raise HTTPException(status_code=400, detail="Provide episode_result or info for grading.")
+    score = GRADE_FNS[payload.task_id](episode_result)
+    response = GradeResponse(task_id=payload.task_id, score=score)
+    return JSONResponse(content=response.model_dump(mode="json"))
 
 
 @app.get("/health")
