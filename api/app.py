@@ -36,6 +36,16 @@ current_obs = env._build_observation()
 app = FastAPI(title="Earthquake Rescue OpenEnv")
 
 
+@app.get("/")
+async def root():
+    return {
+        "name": "earthquake-rescue-multimodal",
+        "status": "ok",
+        "task": current_task_id,
+        "endpoints": ["/health", "/reset", "/step", "/state"],
+    }
+
+
 @app.post("/reset")
 async def reset(
     seed: int = Query(DEFAULT_SEED),
