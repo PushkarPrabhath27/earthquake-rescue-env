@@ -26,13 +26,16 @@ from graders.grader_medium import grader_medium
 
 LLM_API_BASE_URL = os.environ.get("API_BASE_URL", "https://router.huggingface.co/v1")
 MODEL_NAME = os.environ.get("MODEL_NAME", "Qwen/Qwen2.5-72B-Instruct")
-HF_TOKEN = os.environ.get("HF_TOKEN") or os.environ.get("API_KEY") or "missing-token"
+HF_TOKEN = os.environ.get("HF_TOKEN")
 ENV_BASE_URL = os.environ.get("ENV_BASE_URL", "http://127.0.0.1:7860")
 TASK_ID = os.environ.get("TASK_ID", "easy")
 BENCHMARK = os.environ.get("BENCHMARK", "earthquake-rescue-multimodal")
 SEED = int(os.environ.get("SEED", "42"))
 MAX_STEPS = int(os.environ.get("MAX_STEPS", "500"))
 USE_OPENAI = os.environ.get("USE_OPENAI", "0") == "1"
+
+if HF_TOKEN is None:
+    raise ValueError("HF_TOKEN environment variable is required")
 
 
 def print_start(task: str) -> None:
@@ -114,17 +117,18 @@ def bfs_distance_and_next_action(
 def heuristic_action(obs: dict) -> dict:
     victims = [victim for victim in obs["victim_signals"] if not victim["rescued"]]
     scouted = [victim for victim in victims if victim["scouted"]]
+    unscouted = [victim for victim in victims if not victim["scouted"]]
     drone_pos = (obs["drone"]["x"], obs["drone"]["y"])
     rover_pos = (obs["rover"]["x"], obs["rover"]["y"])
 
     drone_action = "hover"
     if TASK_ID == "hard":
         drone_action = "switch_to_rover"
+    elif unscouted:
+        target = min(unscouted, key=lambda victim: dist((victim["x"], victim["y"]), drone_pos))
+        drone_action = step_toward(drone_pos, (target["x"], target["y"]), "hover")
     elif scouted:
         drone_action = "switch_to_rover"
-    elif victims:
-        target = min(victims, key=lambda victim: dist((victim["x"], victim["y"]), drone_pos))
-        drone_action = step_toward(drone_pos, (target["x"], target["y"]), "hover")
 
     rover_target_pool = victims if TASK_ID == "hard" else (scouted or victims)
     rover_action = "wait"
@@ -165,7 +169,7 @@ def llm_action(obs: dict) -> dict:
 
 
 def get_action(obs: dict) -> dict:
-    if USE_OPENAI and HF_TOKEN != "missing-token":
+    if USE_OPENAI:
         try:
             return llm_action(obs)
         except Exception:

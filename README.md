@@ -88,6 +88,14 @@ Environment runner vars used by this repo:
 
 `inference.py` emits strict `[START]`, `[STEP]`, and `[END]` stdout lines for submission logging.
 
+## Baseline Performance
+
+Observed baseline scores from the current deterministic policy on the live environment:
+
+- `easy`: `0.68`
+- `medium`: `0.52`
+- `hard`: `0.78`
+
 ## Deployment
 
 ```powershell
