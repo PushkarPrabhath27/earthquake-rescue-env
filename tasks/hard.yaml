@@ -1,0 +1,8 @@
+name: hard
+rubble_density: 0.40
+victim_count: 5
+max_steps: 350
+min_rescue_fraction: 1.0
+battery_drain_multiplier: 0.8
+modality_switch_cost: 0.03
+drone_detection_radius: 5.0

@@ -1,0 +1,84 @@
+environment:
+  name: earthquake-rescue-multimodal
+  version: "1.0.0"
+  description: >
+    Multimodal drone and rover rescue coordination in post-earthquake terrain.
+  authors:
+    - ScalerMetaHackathon Team
+  license: MIT
+  tasks:
+    - id: easy
+      config: tasks/easy.yaml
+      grader: graders.grader_easy.grader_easy
+    - id: medium
+      config: tasks/medium.yaml
+      grader: graders.grader_medium.grader_medium
+    - id: hard
+      config: tasks/hard.yaml
+      grader: graders.grader_hard.grader_hard
+  action_space:
+    type: dict
+    agents:
+      drone:
+        type: Discrete
+        n: 6
+        labels: [up, down, left, right, hover, switch_to_rover]
+      rover:
+        type: Discrete
+        n: 6
+        labels: [up, down, left, right, wait, switch_to_drone]
+  observation_space:
+    type: dict
+    fields:
+      terrain_map:
+        type: Box
+        shape: [64, 64]
+        dtype: int
+        low: 0
+        high: 1
+      drone:
+        type: dict
+        fields:
+          x: int
+          y: int
+          battery: float
+          modality: str
+      rover:
+        type: dict
+        fields:
+          x: int
+          y: int
+          battery: float
+          modality: str
+      victim_signals:
+        type: list
+        items:
+          type: dict
+          fields:
+            id: int
+            x: int
+            y: int
+            strength: float
+            rescued: bool
+            scouted: bool
+      timestep: int
+  reward:
+    type: float
+    range: [-2.0, 3.0]
+    components:
+      - distance
+      - modality
+      - energy
+      - loop_penalty
+      - collision
+      - completion
+  endpoints:
+    base_url: https://your-space-url.hf.space
+    reset: /reset
+    step: /step
+    state: /state
+    health: /health
+  runtime:
+    max_episode_steps: 500
+    timeout_seconds: 5
+    seed_reproducible: true

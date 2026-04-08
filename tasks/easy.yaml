@@ -1,0 +1,8 @@
+name: easy
+rubble_density: 0.15
+victim_count: 2
+max_steps: 500
+min_rescue_fraction: 0.5
+battery_drain_multiplier: 0.5
+modality_switch_cost: 0.01
+drone_detection_radius: 7.0

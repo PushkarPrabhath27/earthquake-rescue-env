@@ -1,0 +1,8 @@
+name: medium
+rubble_density: 0.30
+victim_count: 4
+max_steps: 400
+min_rescue_fraction: 0.75
+battery_drain_multiplier: 1.0
+modality_switch_cost: 0.02
+drone_detection_radius: 6.0
