@@ -1,4 +1,10 @@
+id: easy
 name: easy
+difficulty: easy
+description: Introductory rescue mission with sparse rubble and two victims.
+objective: Rescue all victims while establishing the basic drone-to-rover workflow.
+success_metric: Rescue every victim before the step budget is exhausted.
+grader: grader_easy.grader_easy
 rubble_density: 0.15
 victim_count: 2
 max_steps: 500

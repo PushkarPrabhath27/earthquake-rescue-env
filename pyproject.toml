@@ -23,7 +23,10 @@ py-modules = ["inference", "grader_easy", "grader_medium", "grader_hard"]
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["api", "api.*", "env", "env.*", "graders", "graders.*", "models", "models.*", "server", "server.*"]
+include = ["api", "api.*", "env", "env.*", "graders", "graders.*", "models", "models.*", "server", "server.*", "tasks", "tasks.*"]
+
+[tool.setuptools.package-data]
+tasks = ["*.yaml"]
 
 [build-system]
 requires = ["setuptools>=68"]

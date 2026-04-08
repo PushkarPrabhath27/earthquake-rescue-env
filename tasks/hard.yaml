@@ -1,8 +1,14 @@
+id: hard
 name: hard
-rubble_density: 0.40
+difficulty: hard
+description: Full-mission rescue scenario with tight routing demands and complete-clearance scoring.
+objective: Rescue all victims in a cluttered disaster zone as quickly as possible.
+success_metric: Rescue every victim while keeping time and battery usage low.
+grader: grader_hard.grader_hard
+rubble_density: 0.36
 victim_count: 5
-max_steps: 350
+max_steps: 420
 min_rescue_fraction: 1.0
-battery_drain_multiplier: 0.8
-modality_switch_cost: 0.03
+battery_drain_multiplier: 0.7
+modality_switch_cost: 0.02
 drone_detection_radius: 5.0

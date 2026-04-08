@@ -6,12 +6,15 @@ app: server.app:app
 port: 7860
 tasks:
   - id: easy
+    name: Easy Rescue Sweep
     config: tasks/easy.yaml
     grader: grader_easy.grader_easy
   - id: medium
+    name: Coordinated Multi-Rescue
     config: tasks/medium.yaml
     grader: grader_medium.grader_medium
   - id: hard
+    name: Full Disaster Clearance
     config: tasks/hard.yaml
     grader: grader_hard.grader_hard
 
@@ -25,12 +28,15 @@ environment:
   license: MIT
   tasks:
     - id: easy
+      name: Easy Rescue Sweep
       config: tasks/easy.yaml
       grader: grader_easy.grader_easy
     - id: medium
+      name: Coordinated Multi-Rescue
       config: tasks/medium.yaml
       grader: grader_medium.grader_medium
     - id: hard
+      name: Full Disaster Clearance
       config: tasks/hard.yaml
       grader: grader_hard.grader_hard
   action_space:
