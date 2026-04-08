@@ -73,7 +73,7 @@ environment:
       - collision
       - completion
   endpoints:
-    base_url: https://your-space-url.hf.space
+    base_url: https://pushkar27-earthquake-rescue-env.hf.space
     reset: /reset
     step: /step
     state: /state

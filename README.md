@@ -1,6 +1,17 @@
+---
+title: Earthquake Rescue Env
+emoji: "🚁"
+colorFrom: pink
+colorTo: red
+sdk: docker
+pinned: false
+license: mit
+short_description: OpenEnv earthquake rescue environment with drone-rover coordination
+---
+
 # Earthquake Rescue Multimodal Robot
 
-OpenEnv-compatible environment for coordinated earthquake rescue using a drone and a ground rover. The project is designed for deterministic grading, FastAPI validation, Docker deployment, and HuggingFace Spaces hosting.
+OpenEnv-compatible environment for coordinated earthquake rescue using a drone and a ground rover. The project is designed for deterministic grading, FastAPI validation, Docker deployment, and Hugging Face Spaces hosting.
 
 ## Overview
 
@@ -39,7 +50,7 @@ Rewards are rounded to `6` decimals and clamped to `[-2.0, 3.0]`.
 | --- | --- | --- | --- | --- |
 | easy | 15% | 2 | 500 | 50% |
 | medium | 30% | 4 | 400 | 75% |
-| hard | 45% | 6 | 300 | 100% |
+| hard | 40% | 5 | 350 | 100% |
 
 ## Local Run
 
@@ -61,6 +72,7 @@ The default `inference.py` policy is deterministic and heuristic-driven:
 
 - drone moves toward the nearest unrescued victim and signals handoff once targets are scouted
 - rover uses BFS shortest-path routing toward the nearest scouted victim, else the nearest reachable victim
+- on `hard`, the baseline switches to full-rescue rover-first routing for stronger completion reliability
 
 Required inference env vars for submission compatibility:
 
@@ -83,4 +95,6 @@ docker build -t earthquake-rescue-env .
 docker run -p 7860:7860 earthquake-rescue-env
 ```
 
-Update `openenv.yaml` with the final HuggingFace Space URL before submission.
+Live Space URL:
+
+`https://pushkar27-earthquake-rescue-env.hf.space`
