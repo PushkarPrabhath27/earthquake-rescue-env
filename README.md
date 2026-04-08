@@ -68,17 +68,17 @@ Invoke-WebRequest -Method Post "http://localhost:7860/reset?seed=42&task_id=easy
 
 ## Baseline Agent
 
-The default `inference.py` policy is deterministic and heuristic-driven:
+The default `inference.py` policy is a proxy-backed hybrid planner:
 
-- drone moves toward the nearest unrescued victim and signals handoff once targets are scouted
-- rover uses BFS shortest-path routing toward the nearest scouted victim, else the nearest reachable victim
-- on `hard`, the baseline switches to full-rescue rover-first routing for stronger completion reliability
+- it makes a required OpenAI-compatible planning call through `API_BASE_URL` and `API_KEY` at episode start
+- rover routing uses exact BFS distance search plus subset-aware rescue-order optimization
+- drone scouting follows the planned rescue route on `easy` and `medium`, while `hard` conserves drone battery and prioritizes rover completion
 
 Required inference env vars for submission compatibility:
 
 - `API_BASE_URL`: LLM endpoint for OpenAI-compatible calls
 - `MODEL_NAME`: model identifier
-- `HF_TOKEN`: API token
+- `API_KEY`: API token injected by the evaluator
 
 Environment runner vars used by this repo:
 
@@ -90,10 +90,10 @@ Environment runner vars used by this repo:
 
 ## Baseline Performance
 
-Observed baseline scores from the current deterministic policy on the live environment:
+Observed baseline scores from the current hybrid baseline in local validator-style runs:
 
 - `easy`: `0.68`
-- `medium`: `0.52`
+- `medium`: `0.60`
 - `hard`: `0.78`
 
 ## Deployment
