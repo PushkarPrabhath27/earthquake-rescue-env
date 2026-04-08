@@ -6,7 +6,7 @@ colorTo: red
 sdk: docker
 pinned: false
 license: mit
-short_description: OpenEnv earthquake rescue environment with drone-rover coordination
+short_description: OpenEnv earthquake rescue with drone-rover agents
 ---
 
 # Earthquake Rescue Multimodal Robot
