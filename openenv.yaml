@@ -1,3 +1,20 @@
+spec_version: 1
+name: earthquake-rescue-multimodal
+type: space
+runtime: fastapi
+app: server.app:app
+port: 7860
+tasks:
+  - id: easy
+    config: tasks/easy.yaml
+    grader: grader_easy.grader_easy
+  - id: medium
+    config: tasks/medium.yaml
+    grader: grader_medium.grader_medium
+  - id: hard
+    config: tasks/hard.yaml
+    grader: grader_hard.grader_hard
+
 environment:
   name: earthquake-rescue-multimodal
   version: "1.0.0"
@@ -9,13 +26,13 @@ environment:
   tasks:
     - id: easy
       config: tasks/easy.yaml
-      grader: graders.grader_easy.grader_easy
+      grader: grader_easy.grader_easy
     - id: medium
       config: tasks/medium.yaml
-      grader: graders.grader_medium.grader_medium
+      grader: grader_medium.grader_medium
     - id: hard
       config: tasks/hard.yaml
-      grader: graders.grader_hard.grader_hard
+      grader: grader_hard.grader_hard
   action_space:
     type: dict
     agents:

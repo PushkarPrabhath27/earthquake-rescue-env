@@ -48,8 +48,8 @@ Rewards are rounded to `6` decimals and clamped to `[-2.0, 3.0]`.
 
 | Task | Rubble | Victims | Steps | Min Rescue |
 | --- | --- | --- | --- | --- |
-| easy | 15% | 2 | 500 | 50% |
-| medium | 30% | 4 | 400 | 75% |
+| easy | 15% | 2 | 500 | 100% |
+| medium | 30% | 4 | 400 | 100% |
 | hard | 40% | 5 | 350 | 100% |
 
 ## Local Run
@@ -92,8 +92,8 @@ Environment runner vars used by this repo:
 
 Observed baseline scores from the current hybrid baseline in local validator-style runs:
 
-- `easy`: `0.68`
-- `medium`: `0.60`
+- `easy`: `0.93`
+- `medium`: `0.61`
 - `hard`: `0.78`
 
 ## Deployment
